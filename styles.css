@@ -1,1 +1,8 @@
-/*  your css code here. If applicable */
+/* Optional styling */
+body {
+  font-family: Arial, sans-serif;
+}
+
+#questions div {
+  margin-bottom: 15px;
+}
