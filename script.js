@@ -1,11 +1,10 @@
-// DOM elements
+// DOM references
 const questionsElement = document.getElementById("questions");
 const submitBtn = document.getElementById("submit");
 const scoreElement = document.getElementById("score");
 
-// ✅ Load progress from sessionStorage
+// ✅ VERY IMPORTANT (must be before renderQuestions)
 let userAnswers = JSON.parse(sessionStorage.getItem("progress")) || [];
-
 // ✅ Load score from localStorage (for persistence after reload)
 const savedScore = localStorage.getItem("score");
 if (savedScore) {
@@ -14,12 +13,10 @@ if (savedScore) {
 // Handle answer selection
 questionsElement.addEventListener("change", function (e) {
   if (e.target.type === "radio") {
-    const name = e.target.name; // question-0, question-1...
-    const index = parseInt(name.split("-")[1]);
+    const index = parseInt(e.target.name.split("-")[1]);
 
     userAnswers[index] = e.target.value;
 
-    // Save to sessionStorage
     sessionStorage.setItem("progress", JSON.stringify(userAnswers));
   }
 });
@@ -32,11 +29,11 @@ submitBtn.addEventListener("click", function () {
     }
   }
 
-  const result = `Your score is ${score} out of 5.`;
+  // ✅ EXACT STRING required by Cypress
+  const resultText = `Your score is ${score} out of 5.`;
 
-  // Display score
-  scoreElement.textContent = result;
+  scoreElement.textContent = resultText;
 
-  // Save in localStorage
-  localStorage.setItem("score", result);
+  // ✅ IMPORTANT: Cypress expects ONLY number in localStorage
+  localStorage.setItem("score", String(score));
 });
